@@ -8,7 +8,8 @@ public class Rocket : MonoBehaviour
 {
     Rigidbody rigidBody;
     AudioSource audioSource;
-    float rcsThrust = 1000f;
+    [SerializeField] float rcsThrust = 250f;
+    [SerializeField] float mainThrust = 50f;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,19 @@ public class Rocket : MonoBehaviour
     {
         Thrust();
         Rotate();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        switch(collision.gameObject.tag)
+        {
+            case "Friendly":
+                print("ooh u safe");
+                break;
+            default:
+                print("nah u ded");
+                break;
+        }
     }
 
     private void Rotate()
@@ -43,10 +57,9 @@ public class Rocket : MonoBehaviour
 
     private void Thrust()
     {
-        float thrustThisFrame = rcsThrust * Time.deltaTime;
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up * thrustThisFrame);
+            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
             if(!audioSource.isPlaying)
             {
                 audioSource.Play();
